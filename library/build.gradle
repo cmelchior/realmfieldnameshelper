@@ -1,0 +1,141 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'com.jfrog.bintray'
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+dependencies {
+    compile 'com.squareup:javapoet:1.7.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'io.realm:realm-annotations:1.1.0'
+
+}
+
+
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            groupId 'dk.ilios'
+            artifactId 'realmfieldnamehelper'
+            version version
+//            artifact file("${rootDir}/spanner-library/build/outputs/aar/spanner-library-release.aar")
+//            artifact sourcesJar
+//            artifact javadocJar
+            pom.withXml {
+                Node root = asNode()
+                root.appendNode('name', 'Realm Field Name Helper')
+                root.appendNode('description', 'Provides type safe Realm queries.')
+                root.appendNode('url', 'https://github.com/cmelchior/realmfieldnamehelper')
+
+                //Iterate over the compile dependencies (we don't want the test ones),
+                // adding a <dependency> node for each
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                }
+
+                def issues = root.appendNode('issueManagement')
+                issues.appendNode('system', 'github')
+                issues.appendNode('url', 'https://github.com/cmelchior/realmfieldnamehelper/issues')
+
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', 'scm:https://github.com/cmelchior/realmfieldnamehelper')
+                scm.appendNode('connection', 'scm:git@github.com:cmelchior/realmfieldnamehelper.git')
+                scm.appendNode('developerConnection', 'scm:git@github.com:cmelchior/realmfieldnamehelper.git')
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'The Apache Software License, Version 2.0')
+                license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+                license.appendNode('distribution', 'repo')
+            }
+        }
+    }
+}
+
+// SNAPSHOT configuration
+artifactory {
+    contextUrl = 'https://oss.jfrog.org'
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local'
+            username = project.hasProperty('bintrayUser') ? bintrayUser : 'noUser'
+            password = project.hasProperty('bintrayKey') ? bintrayKey : 'noKey'
+            maven = true
+        }
+        defaults {
+            publishConfigs('library')
+            publishPom = true
+            publishIvy = false
+        }
+    }
+}
+
+// Release configuration
+bintray {
+    // user and key come from the gradle.properties file in ~/.gradle
+    user = project.hasProperty('realmFieldNamesBintrayUser') ? realmFieldNamesBintrayUser : System.getenv('REALMFIELDNAMES_BINTRAY_USER')
+    key = project.hasProperty('realmFieldNamesBintrayKey') ? realmFieldNamesBintrayKey : System.getenv('REALMFIELDNAMES_BINTRAY_KEY')
+    configurations = ['library']
+    publish = false
+    dryRun = false
+    pkg {
+        repo = 'maven'
+        name = 'Realm Field Name Helper'
+        desc = 'Provides type safe Realm queries'
+        websiteUrl = 'https://github.com/cmelchior/realmfieldnamehelper'
+        issueTrackerUrl = 'https://github.com/cmelchior/realmfieldnames/issues'
+        vcsUrl = 'https://github.com/cmelchior/realmfieldnames.git'
+        licenses = ['Apache-2.0']
+        labels = ['android', 'realm']
+        publicDownloadNumbers = false
+    }
+}
+
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+
+// Configure ch.netzwerg.release plugin
+// See https://github.com/netzwerg/gradle-release-plugin
+//release {
+//    dependsOn build
+//    push = false
+//    versionSuffix = '-SNAPSHOT'
+//    tagPrefix = 'v'
+//}
+
+task checkstyle(type: Checkstyle) {
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+
+//    def configProps = ['proj.module.dir': projectDir.absolutePath]
+//    configProperties configProps
+
+    // empty classpath
+    classpath = files()
+}
