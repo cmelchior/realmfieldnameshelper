@@ -24,7 +24,7 @@ public class FileGenerator {
     }
 
     /**
-     * Generates all the "<class>Fields" fields with field name references.
+     * Generates all the "&lt;class&gt;Fields" fields with field name references.
      * @param fileData Files to create.
      * @return {@code true} if the files where generated, {@code false} if not.
      */

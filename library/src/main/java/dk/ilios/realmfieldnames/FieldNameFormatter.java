@@ -5,7 +5,7 @@ import java.util.Locale;
 
 /**
  * Class for encapsulating the rules for converting between the field name in the Realm model class
- * and the matching name in the "<class>Fields" class.
+ * and the matching name in the "&lt;class&gt;Fields" class.
  */
 public class FieldNameFormatter {
 

@@ -10,18 +10,26 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.0.1'
-        classpath 'ch.netzwerg:gradle-release-plugin:1.1.0'
+        classpath 'ch.netzwerg:gradle-release-plugin:1.2.3'
         classpath 'io.realm:realm-gradle-plugin:1.1.1-SNAPSHOT'
     }
 }
 
 allprojects {
+    group = 'dk.ilios'
+    version = file("${rootDir}/version.txt").text.trim();
     repositories {
         mavenLocal();
         jcenter()
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+// Configure ch.netzwerg.release plugin
+// See https://github.com/netzwerg/gradle-release-plugin
+//release {
+//    dependsOn build
+//    push = false
+//    versionSuffix = '-SNAPSHOT'
+//    tagPrefix = 'v'
+//}
+
