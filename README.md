@@ -1,4 +1,4 @@
-# Realm Field Name Helper
+# Realm Field Names Helper
 
 This library auto-generate helper classes that can help make Realm queries more type safe.
 For each Realm model class a corresponding `<class>Fields` class is created with static references

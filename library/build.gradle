@@ -34,16 +34,16 @@ publishing {
     publications {
         library(MavenPublication) {
             groupId 'dk.ilios'
-            artifactId 'realmfieldnamehelper'
+            artifactId 'realmfieldnameshelper'
             version version
 //            artifact file("${rootDir}/spanner-library/build/outputs/aar/spanner-library-release.aar")
 //            artifact sourcesJar
 //            artifact javadocJar
             pom.withXml {
                 Node root = asNode()
-                root.appendNode('name', 'Realm Field Name Helper')
+                root.appendNode('name', 'Realm Field Names Helper')
                 root.appendNode('description', 'Provides type safe Realm queries.')
-                root.appendNode('url', 'https://github.com/cmelchior/realmfieldnamehelper')
+                root.appendNode('url', 'https://github.com/cmelchior/realmfieldnameshelper')
 
                 //Iterate over the compile dependencies (we don't want the test ones),
                 // adding a <dependency> node for each
@@ -57,12 +57,12 @@ publishing {
 
                 def issues = root.appendNode('issueManagement')
                 issues.appendNode('system', 'github')
-                issues.appendNode('url', 'https://github.com/cmelchior/realmfieldnamehelper/issues')
+                issues.appendNode('url', 'https://github.com/cmelchior/realmfieldnameshelper/issues')
 
                 def scm = root.appendNode('scm')
-                scm.appendNode('url', 'scm:https://github.com/cmelchior/realmfieldnamehelper')
-                scm.appendNode('connection', 'scm:git@github.com:cmelchior/realmfieldnamehelper.git')
-                scm.appendNode('developerConnection', 'scm:git@github.com:cmelchior/realmfieldnamehelper.git')
+                scm.appendNode('url', 'scm:https://github.com/cmelchior/realmfieldnameshelper')
+                scm.appendNode('connection', 'scm:git@github.com:cmelchior/realmfieldnameshelper.git')
+                scm.appendNode('developerConnection', 'scm:git@github.com:cmelchior/realmfieldnameshelper.git')
 
                 def license = root.appendNode('licenses').appendNode('license')
                 license.appendNode('name', 'The Apache Software License, Version 2.0')
@@ -94,18 +94,18 @@ artifactory {
 // Release configuration
 bintray {
     // user and key come from the gradle.properties file in ~/.gradle
-    user = project.hasProperty('realmFieldNamesBintrayUser') ? realmFieldNamesBintrayUser : System.getenv('REALMFIELDNAMES_BINTRAY_USER')
-    key = project.hasProperty('realmFieldNamesBintrayKey') ? realmFieldNamesBintrayKey : System.getenv('REALMFIELDNAMES_BINTRAY_KEY')
+    user = project.hasProperty('realmFieldNamesHelperBintrayUser') ? realmFieldNamesHelperBintrayUser : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_USER')
+    key = project.hasProperty('realmFieldNamesHelperBintrayKey') ? realmFieldNamesHelperBintrayKey : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_KEY')
     configurations = ['library']
     publish = false
     dryRun = false
     pkg {
         repo = 'maven'
-        name = 'Realm Field Name Helper'
+        name = 'Realm Field Names Helper'
         desc = 'Provides type safe Realm queries'
-        websiteUrl = 'https://github.com/cmelchior/realmfieldnamehelper'
-        issueTrackerUrl = 'https://github.com/cmelchior/realmfieldnames/issues'
-        vcsUrl = 'https://github.com/cmelchior/realmfieldnames.git'
+        websiteUrl = 'https://github.com/cmelchior/realmfieldnameshelper'
+        issueTrackerUrl = 'https://github.com/cmelchior/realmfieldnameshelper/issues'
+        vcsUrl = 'https://github.com/cmelchior/realmfieldnameshelper.git'
         licenses = ['Apache-2.0']
         labels = ['android', 'realm']
         publicDownloadNumbers = false
