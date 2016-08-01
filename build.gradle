@@ -2,16 +2,18 @@
 
 buildscript {
     repositories {
-        mavenLocal();
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.0.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'ch.netzwerg:gradle-release-plugin:1.2.3'
-        classpath 'io.realm:realm-gradle-plugin:1.1.1-SNAPSHOT'
+        classpath 'io.realm:realm-gradle-plugin:1.2.0-SNAPSHOT'
     }
 }
 
@@ -19,8 +21,10 @@ allprojects {
     group = 'dk.ilios'
     version = file("${rootDir}/version.txt").text.trim();
     repositories {
-        mavenLocal();
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
     }
 }
 

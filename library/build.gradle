@@ -1,6 +1,6 @@
-apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'java'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'com.jfrog.bintray'
 
@@ -14,7 +14,6 @@ dependencies {
 
 }
 
-
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
     classifier = 'javadoc'
@@ -27,12 +26,12 @@ task sourcesJar(type: Jar, dependsOn: 'classes') {
 publishing {
     publications {
         library(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
             groupId 'dk.ilios'
             artifactId 'realmfieldnameshelper'
             version version
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
 
             pom.withXml {
                 Node root = asNode()
@@ -81,12 +80,12 @@ bintray {
     // user and key come from the gradle.properties file in ~/.gradle
     user = project.hasProperty('realmFieldNamesHelperBintrayUser') ? realmFieldNamesHelperBintrayUser : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_USER')
     key = project.hasProperty('realmFieldNamesHelperBintrayKey') ? realmFieldNamesHelperBintrayKey : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_KEY')
-    configurations = ['library']
+    publications = ['library']
     publish = false
     dryRun = false
     pkg {
         repo = 'maven'
-        name = 'Realm Field Names Helper'
+        name = 'realmfieldnameshelper'
         desc = 'Provides type safe Realm queries'
         websiteUrl = 'https://github.com/cmelchior/realmfieldnameshelper'
         issueTrackerUrl = 'https://github.com/cmelchior/realmfieldnameshelper/issues'
