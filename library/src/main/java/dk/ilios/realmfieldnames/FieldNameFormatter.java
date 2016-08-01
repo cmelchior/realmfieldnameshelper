@@ -1,6 +1,5 @@
 package dk.ilios.realmfieldnames;
 
-
 import java.util.Locale;
 
 /**

@@ -38,8 +38,6 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
     private Types typeUtils;
     private Messager messager;
     private TypeMirror ignoreAnnotation;
-//    private TypeMirror realmModelInterface;
-//    private TypeMirror realmProxyInterface;
     private FileGenerator fileGenerator;
     private boolean done = false;
 
@@ -50,8 +48,6 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
         messager = processingEnv.getMessager();
         Elements elementUtils = processingEnv.getElementUtils();
         ignoreAnnotation = elementUtils.getTypeElement("io.realm.annotations.Ignore").asType();
-//        realmModelInterface = elementUtils.getTypeElement("io.realm.RealmModel").asType();
-//        realmProxyInterface = elementUtils.getTypeElement("io.realm.internal.RealmObjectProxy").asType();
         fileGenerator = new FileGenerator(processingEnv.getFiler());
     }
 
@@ -65,7 +61,6 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
         if (done) {
             return CONSUME_ANNOTATIONS;
         }
-        messager.printMessage(Diagnostic.Kind.NOTE, "Creating field classes");
 
         // Create all proxy classes
         TypeElement realmClassAnnotation = annotations.iterator().next();

@@ -114,3 +114,13 @@ task checkstyle(type: Checkstyle) {
     // empty classpath
     classpath = files()
 }
+
+// Configure ch.netzwerg.release plugin
+// See https://github.com/netzwerg/gradle-release-plugin
+release {
+    dependsOn build
+    push = false
+    versionSuffix = '-SNAPSHOT'
+    tagPrefix = 'v'
+}
+

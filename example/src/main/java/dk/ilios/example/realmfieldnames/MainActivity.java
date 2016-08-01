@@ -7,8 +7,11 @@ import dk.ilios.realmfieldnames.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +21,16 @@ public class MainActivity extends AppCompatActivity {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
-        Realm realm = Realm.getInstance(realmConfig);
+        realm = Realm.getInstance(realmConfig);
 
-        RealmQuery<Person> results = realm.where(Person.class).equalTo("name", "John");
+        RealmResults<Person> results = realm.where(Person.class)
+                .equalTo(PersonFields.NAME, "John")
+                .findAll();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }

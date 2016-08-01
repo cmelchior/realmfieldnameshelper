@@ -16,6 +16,7 @@ buildscript {
         classpath 'io.realm:realm-gradle-plugin:1.2.0-SNAPSHOT'
     }
 }
+apply plugin: 'ch.netzwerg.release'
 
 allprojects {
     group = 'dk.ilios'
@@ -27,13 +28,3 @@ allprojects {
         }
     }
 }
-
-// Configure ch.netzwerg.release plugin
-// See https://github.com/netzwerg/gradle-release-plugin
-//release {
-//    dependsOn build
-//    push = false
-//    versionSuffix = '-SNAPSHOT'
-//    tagPrefix = 'v'
-//}
-
