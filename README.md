@@ -9,7 +9,7 @@ to all queryable field names.
 Just include the following dependency in your `gradle.build` file
 
 ```gradle
-compile 'dk.ilios:realmfieldnames:1.0.0'
+compile 'dk.ilios:realmfieldnameshelper:1.0.0'
 ```
 
 ## Usage
