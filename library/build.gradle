@@ -63,12 +63,12 @@ artifactory {
     publish {
         repository {
             repoKey = 'oss-snapshot-local'
-            username = project.hasProperty('bintrayUser') ? bintrayUser : 'noUser'
-            password = project.hasProperty('bintrayKey') ? bintrayKey : 'noKey'
+            username = project.hasProperty('privateBintrayUser') ? privateBintrayUser : System.getenv('PRIVATE_BINTRAY_USER')
+            password = project.hasProperty('privateBintrayKey') ? privateBintrayKey : System.getenv('PRIVATE_BINTRAY_KEY')
             maven = true
         }
         defaults {
-            publishConfigs('library')
+            publications('library')
             publishPom = true
             publishIvy = false
         }
@@ -78,8 +78,8 @@ artifactory {
 // Release configuration
 bintray {
     // user and key come from the gradle.properties file in ~/.gradle
-    user = project.hasProperty('realmFieldNamesHelperBintrayUser') ? realmFieldNamesHelperBintrayUser : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_USER')
-    key = project.hasProperty('realmFieldNamesHelperBintrayKey') ? realmFieldNamesHelperBintrayKey : System.getenv('REALMFIELDNAMESHELPER_BINTRAY_KEY')
+    user = project.hasProperty('privateBintrayUser') ? privateBintrayUser : System.getenv('PRIVATE_BINTRAY_USER')
+    key = project.hasProperty('privateBintrayKey') ? privateBintrayKey : System.getenv('PRIVATE_BINTRAY_KEY')
     publications = ['library']
     publish = false
     dryRun = false
