@@ -1,6 +1,7 @@
 # Realm Field Names Helper
 
 This library auto-generate helper classes that can help make Realm queries more type safe.
+
 For each Realm model class a corresponding `<class>Fields` class is created with static references
 to all queryable field names.
 
@@ -12,11 +13,14 @@ Just include the following dependency in your `gradle.build` file
 compile 'dk.ilios:realmfieldnameshelper:1.0.0'
 ```
 
+This library currently only works together with `Realm 1.2.0-SNAPSHOT`.
+See [here](https://github.com/realm/realm-java#using-snapshots) for information on how to use Realm SNAPSHOT's.
+
 ## Usage
 
 The library adds an annotation processor that automatically detects all Realm model classes and
 generated an extra class called `<className>Fields`. This class will contain static references
-to all field names, which can then be used when creating queries.
+to all field names that can be queried.
 
 ```java
 // Standard Realm Model class
