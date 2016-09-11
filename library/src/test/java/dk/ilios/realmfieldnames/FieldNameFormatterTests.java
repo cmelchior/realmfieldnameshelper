@@ -78,7 +78,7 @@ public class FieldNameFormatterTests {
      * @see <a href="https://github.com/cmelchior/realmfieldnameshelper/issues/6">Some Field names are missing leading Character</a>
      */
     @Test
-    public void issue6() {
+    public void ignoreHungarianNotationInMiddleOfString() {
         String result = formatter.format("itemQuantityDelta");
         assertEquals("ITEM_QUANTITY_DELTA", result);
     }

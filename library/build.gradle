@@ -10,7 +10,8 @@ targetCompatibility = '1.7'
 dependencies {
     compile 'com.squareup:javapoet:1.7.0'
     testCompile 'junit:junit:4.12'
-    testCompile 'io.realm:realm-annotations:1.1.0'
+    testCompile 'io.realm:realm-annotations:1.2.0'
+    testCompile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
