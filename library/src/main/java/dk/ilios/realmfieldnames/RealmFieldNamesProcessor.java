@@ -18,6 +18,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -37,7 +38,10 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
     private Set<ClassData> classes = new HashSet<>();
     private Types typeUtils;
     private Messager messager;
+    private Elements elementUtils;
     private TypeMirror ignoreAnnotation;
+    private TypeMirror realmModelClass;
+    private DeclaredType realmListClass;
     private FileGenerator fileGenerator;
     private boolean done = false;
 
@@ -46,8 +50,11 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
         super.init(processingEnv);
         typeUtils = processingEnv.getTypeUtils();
         messager = processingEnv.getMessager();
-        Elements elementUtils = processingEnv.getElementUtils();
+        elementUtils = processingEnv.getElementUtils();
         ignoreAnnotation = elementUtils.getTypeElement("io.realm.annotations.Ignore").asType();
+        realmModelClass = elementUtils.getTypeElement("io.realm.RealmModel").asType();
+        realmListClass = typeUtils.getDeclaredType(elementUtils.getTypeElement("io.realm.RealmList"),
+                typeUtils.getWildcardType(null, null));
         fileGenerator = new FileGenerator(processingEnv.getFiler());
     }
 
@@ -101,12 +108,34 @@ public class RealmFieldNamesProcessor extends AbstractProcessor {
                 }
 
                 if (!ignoreField) {
-                    data.addField(element.getSimpleName().toString());
+                    data.addField(element.getSimpleName().toString(), getLinkedFieldType(element));
                 }
             }
         }
 
         return data;
+    }
+
+    /**
+     * Returns the qualified name of the linked Realm class field or {@code null} if it is not a linked
+     * class.
+     */
+    private String getLinkedFieldType(Element field) {
+        if (typeUtils.isAssignable(field.asType(), realmModelClass)) {
+            // Object link
+            TypeElement typeElement = elementUtils.getTypeElement(field.asType().toString());
+            return typeElement.getQualifiedName().toString();
+        } else if (typeUtils.isAssignable(field.asType(), realmListClass)) {
+            // List link
+            TypeMirror fieldType = field.asType();
+            List<? extends TypeMirror> typeArguments = ((DeclaredType) fieldType).getTypeArguments();
+            if (typeArguments.size() == 0) {
+                return null;
+            }
+            return typeArguments.get(0).toString();
+        } else {
+            return null;
+        }
     }
 
     private String getPackageName(TypeElement classElement) {

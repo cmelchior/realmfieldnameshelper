@@ -26,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
         RealmResults<Person> results = realm.where(Person.class)
                 .equalTo(PersonFields.NAME, "John")
                 .findAll();
+
+        RealmResults<Person> results2 = realm.where(Person.class)
+                .equalTo(PersonFields.FAVORITE_DOG.NAME, "Fido")
+                .findAll();
     }
 
     @Override

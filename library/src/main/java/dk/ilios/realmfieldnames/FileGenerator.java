@@ -5,6 +5,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
@@ -30,7 +31,7 @@ public class FileGenerator {
      */
     public boolean generate(Set<ClassData> fileData) {
         for (ClassData classData : fileData) {
-            if (!generateFile(classData)) {
+            if (!generateFile(classData, fileData)) {
                 return false;
             }
         }
@@ -38,7 +39,7 @@ public class FileGenerator {
         return true;
     }
 
-    private boolean generateFile(ClassData classData) {
+    private boolean generateFile(ClassData classData, Set<ClassData> classPool) {
 
         TypeSpec.Builder fileBuilder = TypeSpec.classBuilder(classData.getSimpleClassName() + "Fields")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -47,12 +48,27 @@ public class FileGenerator {
 
 
         // Add a static field reference to each queryable field in the Realm model class
-        for (String fieldName : classData.getFields()) {
-            FieldSpec field = FieldSpec.builder(String.class, formatter.format(fieldName))
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$S", fieldName)
-                    .build();
-            fileBuilder.addField(field);
+        for (Map.Entry<String, String> entry : classData.getFields().entrySet()) {
+
+            String fieldName = entry.getKey();
+            if (entry.getValue() != null) {
+                // Add linked field names (only up to depth 1)
+                for (ClassData data : classPool) {
+                    if (data.getQualifiedClassName().equals(entry.getValue())) {
+                        TypeSpec.Builder linkedTypeSpec = TypeSpec.classBuilder(formatter.format(fieldName))
+                                .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
+                        Map<String, String> linkedClassFields = data.getFields();
+                        addField(linkedTypeSpec, "$", fieldName);
+                        for (String linkedFieldName : linkedClassFields.keySet()) {
+                            addField(linkedTypeSpec, linkedFieldName, fieldName + "." + linkedFieldName);
+                        }
+                        fileBuilder.addType(linkedTypeSpec.build());
+                    }
+                }
+            } else {
+                // Add normal field name
+                addField(fileBuilder, fieldName, fieldName);
+            }
         }
 
         JavaFile javaFile = JavaFile.builder(classData.getPackageName(), fileBuilder.build()).build();
@@ -63,5 +79,13 @@ public class FileGenerator {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void addField(TypeSpec.Builder fileBuilder, String fieldName, String fieldNameValue) {
+        FieldSpec field = FieldSpec.builder(String.class, formatter.format(fieldName))
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$S", fieldNameValue)
+                .build();
+        fileBuilder.addField(field);
     }
 }
