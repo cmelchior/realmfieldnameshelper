@@ -74,6 +74,15 @@ public class FieldNameFormatterTests {
         assertEquals("FOO", result);
     }
 
+    /**
+     * @see <a href="https://github.com/cmelchior/realmfieldnameshelper/issues/6">Some Field names are missing leading Character</a>
+     */
+    @Test
+    public void issue6() {
+        String result = formatter.format("itemQuantityDelta");
+        assertEquals("ITEM_QUANTITY_DELTA", result);
+    }
+
     @Test
     public void useUSLocaleForConversion() {
         // Right now we use the US locale to do the conversion.

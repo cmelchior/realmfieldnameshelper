@@ -38,7 +38,7 @@ public class FieldNameFormatter {
                 currentCodepoint = fieldName.codePointAt(offset);
 
                 if (previousCodepoint != null) {
-                    if (Character.isUpperCase(currentCodepoint) && !Character.isUpperCase(previousCodepoint) && previousCodepoint == 'm') {
+                    if (Character.isUpperCase(currentCodepoint) && !Character.isUpperCase(previousCodepoint) && previousCodepoint == 'm' && result.length() == 1) {
                         // Hungarian notation starting with: mX
                         result.delete(0, 1);
                         result.appendCodePoint(currentCodepoint);
