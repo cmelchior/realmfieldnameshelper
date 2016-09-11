@@ -10,11 +10,10 @@ to all queryable field names.
 Just include the following dependency in your `gradle.build` file
 
 ```gradle
-compile 'dk.ilios:realmfieldnameshelper:1.0.0'
+compile 'dk.ilios:realmfieldnameshelper:1.1.0'
 ```
 
-This library currently only works together with `Realm 1.1.1` and `Realm 1.2.0-SNAPSHOT`.
-See [here](https://github.com/realm/realm-java#using-snapshots) for information on how to use Realm SNAPSHOT's.
+This library is compatible with  `Realm 1.1.1` and onwards.
 
 ## Usage
 
