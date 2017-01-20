@@ -43,7 +43,7 @@ public class FileGenerator {
 
         TypeSpec.Builder fileBuilder = TypeSpec.classBuilder(classData.getSimpleClassName() + "Fields")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addJavadoc("This class enumerate all queryable fields in $L.$L\n",
+                .addJavadoc("This class enumerate all queryable fields in {@link $L.$L}\n",
                         classData.getPackageName(), classData.getSimpleClassName());
 
 
