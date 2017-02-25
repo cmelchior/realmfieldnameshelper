@@ -43,11 +43,20 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         typeUtils = processingEnv.typeUtils
         messager = processingEnv.messager
         elementUtils = processingEnv.elementUtils
-        ignoreAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.Ignore").asType()
-        realmModelClass = elementUtils!!.getTypeElement("io.realm.RealmModel").asType()
-        realmListClass = typeUtils!!.getDeclaredType(elementUtils!!.getTypeElement("io.realm.RealmList"),
-                typeUtils!!.getWildcardType(null, null))
-        fileGenerator = FileGenerator(processingEnv.filer)
+
+        // If the Realm class isn't found something is wrong the project setup.
+        // Most likely Realm isn't on the class path, so just disable the
+        // annotation processor
+        val isRealmAvailable = elementUtils!!.getTypeElement("io.realm.Realm") != null
+        if (!isRealmAvailable) {
+            done = true;
+        } else {
+            ignoreAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.Ignore")?.asType()
+            realmModelClass = elementUtils!!.getTypeElement("io.realm.RealmModel")?.asType()
+            realmListClass = typeUtils!!.getDeclaredType(elementUtils!!.getTypeElement("io.realm.RealmList"),
+                    typeUtils!!.getWildcardType(null, null))
+            fileGenerator = FileGenerator(processingEnv.filer)
+        }
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
