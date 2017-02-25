@@ -33,7 +33,8 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
     private var messager: Messager? = null
     private var elementUtils: Elements? = null
     private var ignoreAnnotation: TypeMirror? = null
-    private var realmModelClass: TypeMirror? = null
+    private var realmClassAnnotation: TypeElement? = null
+    private var realmModelInterface: TypeMirror? = null
     private var realmListClass: DeclaredType? = null
     private var fileGenerator: FileGenerator? = null
     private var done = false
@@ -49,10 +50,11 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         // annotation processor
         val isRealmAvailable = elementUtils!!.getTypeElement("io.realm.Realm") != null
         if (!isRealmAvailable) {
-            done = true;
+            done = true
         } else {
             ignoreAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.Ignore")?.asType()
-            realmModelClass = elementUtils!!.getTypeElement("io.realm.RealmModel")?.asType()
+            realmClassAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.RealmClass")
+            realmModelInterface = elementUtils!!.getTypeElement("io.realm.RealmModel")?.asType()
             realmListClass = typeUtils!!.getDeclaredType(elementUtils!!.getTypeElement("io.realm.RealmList"),
                     typeUtils!!.getWildcardType(null, null))
             fileGenerator = FileGenerator(processingEnv.filer)
@@ -69,10 +71,11 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         }
 
         // Create all proxy classes
-        val realmClassAnnotation = annotations.iterator().next()
-        for (classElement in roundEnv.getElementsAnnotatedWith(realmClassAnnotation)) {
-            val classData = processClass(classElement as TypeElement)
-            classes.add(classData)
+        roundEnv.getElementsAnnotatedWith(realmClassAnnotation).forEach { classElement ->
+            if (typeUtils!!.isAssignable(classElement.asType(), realmModelInterface)) {
+                val classData = processClass(classElement as TypeElement)
+                classes.add(classData)
+            }
         }
 
         done = fileGenerator!!.generate(classes)
@@ -96,15 +99,9 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
                 }
 
                 // Don't add any fields marked with @Ignore
-                val elementAnnotations = variableElement.annotationMirrors
-                var ignoreField = false
-                for (elementAnnotation in elementAnnotations) {
-                    val annotationType = elementAnnotation.annotationType
-                    if (typeUtils!!.isAssignable(annotationType, ignoreAnnotation)) {
-                        ignoreField = true
-                        break
-                    }
-                }
+                val ignoreField = variableElement.annotationMirrors
+                        .map { it.annotationType.toString() }
+                        .contains("io.realm.annotations.Ignore")
 
                 if (!ignoreField) {
                     data.addField(it.getSimpleName().toString(), getLinkedFieldType(it))
@@ -120,7 +117,7 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
      * class.
      */
     private fun getLinkedFieldType(field: Element): String? {
-        if (typeUtils!!.isAssignable(field.asType(), realmModelClass)) {
+        if (typeUtils!!.isAssignable(field.asType(), realmModelInterface)) {
             // Object link
             val typeElement = elementUtils!!.getTypeElement(field.asType().toString())
             return typeElement.qualifiedName.toString()

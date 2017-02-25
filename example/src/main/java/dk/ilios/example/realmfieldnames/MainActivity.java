@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
+        Realm.init(getApplicationContext());
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         realm = Realm.getInstance(realmConfig);
@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         RealmResults<Person> results2 = realm.where(Person.class)
                 .equalTo(PersonFields.FAVORITE_DOG.NAME, "Fido")
+                .findAll();
+
+        RealmResults<Dog> results3 = realm.where(Dog.class)
+                .equalTo(DogFields.NAME, "Fido")
                 .findAll();
     }
 
