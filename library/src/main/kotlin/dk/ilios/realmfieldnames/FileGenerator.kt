@@ -26,7 +26,9 @@ class FileGenerator(private val filer: Filer) {
      * @return `true` if the files where generated, `false` if not.
      */
     fun generate(fileData: Set<ClassData>): Boolean {
-        return fileData.all { generateFile(it, fileData) }
+        return fileData
+                .filter { !it.libraryClass }
+                .all { generateFile(it, fileData) }
     }
 
     private fun generateFile(classData: ClassData, classPool: Set<ClassData>): Boolean {

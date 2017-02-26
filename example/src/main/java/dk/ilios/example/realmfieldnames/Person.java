@@ -1,5 +1,6 @@
 package dk.ilios.example.realmfieldnames;
 
+import dk.ilios.example.library.LibraryModel;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -12,6 +13,7 @@ public class Person extends RealmObject {
     public boolean has_fish; // fields already using "_" are just converted as they are.
     public RealmList<Dog> dogs;
     public Dog favoriteDog;
+    public LibraryModel libraryRef;
 
     @Ignore
     public int random;

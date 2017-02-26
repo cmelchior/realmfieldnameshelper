@@ -1,6 +1,6 @@
 package dk.ilios.realmfieldnames
 
-import java.util.HashSet
+import java.util.*
 
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Messager
@@ -8,12 +8,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedAnnotationTypes
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.Modifier
-import javax.lang.model.element.PackageElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
+import javax.lang.model.element.*
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
@@ -78,6 +73,22 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
             }
         }
 
+        // If a model class references a library class, the library class will not be part of this
+        // annotation processor round. For all those references we need to pull field information
+        // from the classpath instead.
+        val libraryClasses = HashMap<String, ClassData>()
+        classes.forEach {
+            it.fields.forEach { fieldName, value ->
+                // Analyze a the library class file the first time it is encountered.
+                if (value != null ) {
+                    if (classes.all{ it.qualifiedClassName != value } && !libraryClasses.containsKey(value)) {
+                        libraryClasses.put(value, processLibraryClass(value))
+                    }
+                }
+            }
+        }
+        classes.addAll(libraryClasses.values)
+
         done = fileGenerator!!.generate(classes)
         return CONSUME_ANNOTATIONS
     }
@@ -106,6 +117,26 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
                 if (!ignoreField) {
                     data.addField(it.getSimpleName().toString(), getLinkedFieldType(it))
                 }
+            }
+        }
+
+        return data
+    }
+
+    private fun processLibraryClass(qualifiedClassName: String): ClassData {
+        val libraryClass = Class.forName(qualifiedClassName) // Library classes should be on the classpath
+        val packageName = libraryClass.`package`.name
+        val className = libraryClass.simpleName
+        val data = ClassData(packageName, className, libraryClass = true)
+
+        libraryClass.fields.forEach { field ->
+            if (java.lang.reflect.Modifier.isStatic(field.modifiers)) {
+                return@forEach // completely ignore any static fields
+            }
+
+            // Add field if it is not being ignored.
+            if (field.annotations.all { it.toString() != "io.realm.annotations.Ignore" }) {
+                data.addField(field.name, field.type.name)
             }
         }
 

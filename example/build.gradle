@@ -28,6 +28,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile project(path: ':example-library')
     annotationProcessor project(':library')
     kapt project(':library')
 }
