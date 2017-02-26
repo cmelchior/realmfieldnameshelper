@@ -10,7 +10,11 @@ to all queryable field names.
 Just include the following dependency in your `gradle.build` file
 
 ```gradle
-apt 'dk.ilios:realmfieldnameshelper:1.1.0'
+// Android Java projects
+annotationProcessor 'dk.ilios:realmfieldnameshelper:1.1.1'
+
+// Android Kotlin projects
+kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
 ```
 
 This library is compatible with  `Realm 1.1.1` and onwards.
