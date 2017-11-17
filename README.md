@@ -19,6 +19,22 @@ kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
 
 This library is compatible with  `Realm 1.1.1` and onwards.
 
+### Plugin order with Kotlin
+
+When combining Realm and Kotlin, the order of plugins matter in order for everything to work
+correctly. Plugins should be applied in the following order:
+
+```gradle
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+
+dependencies {
+    kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
+}
+```
+
 ## Usage
 
 The library adds an annotation processor that automatically detects all Realm model classes and
