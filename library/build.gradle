@@ -9,11 +9,11 @@ sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 
 dependencies {
-    compile 'com.squareup:javapoet:1.7.0'
-    testCompile 'junit:junit:4.12'
-    testCompile 'io.realm:realm-annotations:1.2.0'
-    testCompile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.squareup:javapoet:1.9.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'io.realm:realm-android-library:4.1.1'
+    testImplementation 'io.realm:realm-annotations:4.1.1'
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -125,18 +125,7 @@ release {
     versionSuffix = '-SNAPSHOT'
     tagPrefix = 'v'
 }
-buildscript {
-    ext.kotlin_version = '1.0.6'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-repositories {
-    mavenCentral()
-}
+
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }

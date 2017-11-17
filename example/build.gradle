@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "dk.ilios.example.realmfieldnames"
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -24,14 +25,9 @@ android {
     }
 }
 
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile project(path: ':example-library')
-    annotationProcessor project(':library')
+    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation project(path: ':example-library')
     kapt project(':library')
-}
-repositories {
-    mavenCentral()
 }
