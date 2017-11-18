@@ -35,7 +35,7 @@ class FieldNameFormatter {
                 currentCodepoint = normalizedFieldName.codePointAt(offset)
 
                 if (previousCodepoint != null) {
-                    if (Character.isUpperCase(currentCodepoint) && !Character.isUpperCase(previousCodepoint) && previousCodepoint === 'm'.toInt() && result.length == 1) {
+                    if (Character.isUpperCase(currentCodepoint) && !Character.isUpperCase(previousCodepoint) && previousCodepoint === 'm'.toInt() as Int? && result.length == 1) {
                         // Hungarian notation starting with: mX
                         result.delete(0, 1)
                         result.appendCodePoint(currentCodepoint)
@@ -50,7 +50,7 @@ class FieldNameFormatter {
                         }
                         result.appendCodePoint(currentCodepoint)
 
-                    } else if (currentCodepoint === '-'.toInt() || currentCodepoint === '_'.toInt()) {
+                    } else if (currentCodepoint === '-'.toInt() as Int? || currentCodepoint === '_'.toInt() as Int?) {
                         // Word-separator: x-x or x_x
                         result.append("_")
 
