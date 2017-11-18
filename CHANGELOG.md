@@ -1,6 +1,6 @@
 ### 1.2.0
 - Fixed a bug preventing private fields in library projects from being generated (#25).
-
+- When using ``@LinkingObjects`. Fields of for the parent type is now also generated instead one link away.
 
 ### 1.1.1
 - Fixed a bug that crashed the annotation processor if Realm wasn't on the classpath (#14).

@@ -24,34 +24,37 @@ import javax.tools.Diagnostic
 class RealmFieldNamesProcessor : AbstractProcessor() {
 
     private val classes = HashSet<ClassData>()
-    private var typeUtils: Types? = null
-    private var messager: Messager? = null
-    private var elementUtils: Elements? = null
+    lateinit private var typeUtils: Types
+    lateinit private var messager: Messager
+    lateinit private var elementUtils: Elements
     private var ignoreAnnotation: TypeMirror? = null
     private var realmClassAnnotation: TypeElement? = null
     private var realmModelInterface: TypeMirror? = null
     private var realmListClass: DeclaredType? = null
+    private var realmResultsClass: DeclaredType? = null
     private var fileGenerator: FileGenerator? = null
     private var done = false
 
     @Synchronized override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-        typeUtils = processingEnv.typeUtils
-        messager = processingEnv.messager
-        elementUtils = processingEnv.elementUtils
+        typeUtils = processingEnv.typeUtils!!
+        messager = processingEnv.messager!!
+        elementUtils = processingEnv.elementUtils!!
 
         // If the Realm class isn't found something is wrong the project setup.
         // Most likely Realm isn't on the class path, so just disable the
         // annotation processor
-        val isRealmAvailable = elementUtils!!.getTypeElement("io.realm.Realm") != null
+        val isRealmAvailable = elementUtils.getTypeElement("io.realm.Realm") != null
         if (!isRealmAvailable) {
             done = true
         } else {
-            ignoreAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.Ignore")?.asType()
-            realmClassAnnotation = elementUtils!!.getTypeElement("io.realm.annotations.RealmClass")
-            realmModelInterface = elementUtils!!.getTypeElement("io.realm.RealmModel")?.asType()
-            realmListClass = typeUtils!!.getDeclaredType(elementUtils!!.getTypeElement("io.realm.RealmList"),
-                    typeUtils!!.getWildcardType(null, null))
+            ignoreAnnotation = elementUtils.getTypeElement("io.realm.annotations.Ignore")?.asType()
+            realmClassAnnotation = elementUtils.getTypeElement("io.realm.annotations.RealmClass")
+            realmModelInterface = elementUtils.getTypeElement("io.realm.RealmModel")?.asType()
+            realmListClass = typeUtils.getDeclaredType(elementUtils.getTypeElement("io.realm.RealmList"),
+                    typeUtils.getWildcardType(null, null))
+            realmResultsClass = typeUtils.getDeclaredType(elementUtils.getTypeElement("io.realm.RealmResults"),
+                    typeUtils.getWildcardType(null, null))
             fileGenerator = FileGenerator(processingEnv.filer)
         }
     }
@@ -67,7 +70,7 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
 
         // Create all proxy classes
         roundEnv.getElementsAnnotatedWith(realmClassAnnotation).forEach { classElement ->
-            if (typeUtils!!.isAssignable(classElement.asType(), realmModelInterface)) {
+            if (typeUtils.isAssignable(classElement.asType(), realmModelInterface)) {
                 val classData = processClass(classElement as TypeElement)
                 classes.add(classData)
             }
@@ -148,12 +151,12 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
      * class.
      */
     private fun getLinkedFieldType(field: Element): String? {
-        if (typeUtils!!.isAssignable(field.asType(), realmModelInterface)) {
+        if (typeUtils.isAssignable(field.asType(), realmModelInterface)) {
             // Object link
-            val typeElement = elementUtils!!.getTypeElement(field.asType().toString())
+            val typeElement = elementUtils.getTypeElement(field.asType().toString())
             return typeElement.qualifiedName.toString()
-        } else if (typeUtils!!.isAssignable(field.asType(), realmListClass)) {
-            // List link
+        } else if (typeUtils.isAssignable(field.asType(), realmListClass) || typeUtils.isAssignable(field.asType(), realmResultsClass)) {
+            // List link or LinkingObjects
             val fieldType = field.asType()
             val typeArguments = (fieldType as DeclaredType).typeArguments
             if (typeArguments.size == 0) {
@@ -169,7 +172,7 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         val enclosingElement = classElement.enclosingElement
 
         if (enclosingElement.kind != ElementKind.PACKAGE) {
-            messager!!.printMessage(Diagnostic.Kind.ERROR,
+            messager.printMessage(Diagnostic.Kind.ERROR,
                     "Could not determine the package name. Enclosing element was: " + enclosingElement.kind)
             return null
         }

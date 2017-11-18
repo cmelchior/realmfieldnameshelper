@@ -3,7 +3,9 @@ package dk.ilios.example.realmfieldnames;
 import dk.ilios.example.library.LibraryModel;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.Ignore;
+import io.realm.annotations.LinkingObjects;
 
 public class Person extends RealmObject {
 
@@ -14,7 +16,9 @@ public class Person extends RealmObject {
     public RealmList<Dog> dogs;
     public Dog favoriteDog;
     public LibraryModel libraryRef;
-
+    public RealmList<Person> children;
+    @LinkingObjects("children")
+    public final RealmResults<Person> parents = null;
     @Ignore
     public int random;
 }
