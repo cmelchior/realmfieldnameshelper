@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
@@ -22,6 +21,15 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+// TODO Using `plugin: kotlin-kapt` does not work for some reason. Maybe because the annotation
+// processor isn't a real dependency?
+kapt {
+    generateStubs = true
+    javacOptions {
+        option("-Xmaxerrs", 500)
     }
 }
 

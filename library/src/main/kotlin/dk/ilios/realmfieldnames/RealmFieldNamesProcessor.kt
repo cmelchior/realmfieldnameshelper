@@ -78,8 +78,8 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         // from the classpath instead.
         val libraryClasses = HashMap<String, ClassData>()
         classes.forEach {
-            it.fields.forEach { fieldName, value ->
-                // Analyze a the library class file the first time it is encountered.
+            it.fields.forEach { _, value ->
+                // Analyze the library class file the first time it is encountered.
                 if (value != null ) {
                     if (classes.all{ it.qualifiedClassName != value } && !libraryClasses.containsKey(value)) {
                         libraryClasses.put(value, processLibraryClass(value))
@@ -129,7 +129,7 @@ class RealmFieldNamesProcessor : AbstractProcessor() {
         val className = libraryClass.simpleName
         val data = ClassData(packageName, className, libraryClass = true)
 
-        libraryClass.fields.forEach { field ->
+        libraryClass.declaredFields.forEach { field ->
             if (java.lang.reflect.Modifier.isStatic(field.modifiers)) {
                 return@forEach // completely ignore any static fields
             }

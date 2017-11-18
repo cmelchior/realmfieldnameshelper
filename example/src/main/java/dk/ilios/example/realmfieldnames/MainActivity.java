@@ -40,9 +40,14 @@ public class MainActivity extends AppCompatActivity {
                 .equalTo(DogFields.NAME, "Fido")
                 .findAll();
 
-        // Library references
+        // Library references - public fields
         RealmResults<Person> results4 = realm.where(Person.class)
-                .equalTo(PersonFields.LIBRARY_REF.LIBRARY_FIELD, "Bar")
+                .equalTo(PersonFields.LIBRARY_REF.LIBRARY_PUBLIC_FIELD, "Bar")
+                .findAll();
+
+        // Library references - private fields
+        RealmResults<Person> results5 = realm.where(Person.class)
+                .equalTo(PersonFields.LIBRARY_REF.LIBRARY_PRIVATE_FIELD, true)
                 .findAll();
     }
 
