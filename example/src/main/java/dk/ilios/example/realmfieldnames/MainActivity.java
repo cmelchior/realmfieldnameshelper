@@ -35,18 +35,23 @@ public class MainActivity extends AppCompatActivity {
                 .equalTo(PersonFields.FAVORITE_DOG.NAME, "Fido")
                 .findAll();
 
+        // Linking object references
+        RealmResults<Person> results3 = realm.where(Person.class)
+                .equalTo(PersonFields.FAVORITE_DOG.NAME, "Fido")
+                .findAll();
+
         // Kotlin class references
-        RealmResults<Dog> results3 = realm.where(Dog.class)
+        RealmResults<Dog> results4 = realm.where(Dog.class)
                 .equalTo(DogFields.NAME, "Fido")
                 .findAll();
 
         // Library references - public fields
-        RealmResults<Person> results4 = realm.where(Person.class)
+        RealmResults<Person> results5 = realm.where(Person.class)
                 .equalTo(PersonFields.LIBRARY_REF.LIBRARY_PUBLIC_FIELD, "Bar")
                 .findAll();
 
         // Library references - private fields
-        RealmResults<Person> results5 = realm.where(Person.class)
+        RealmResults<Person> results6 = realm.where(Person.class)
                 .equalTo(PersonFields.LIBRARY_REF.LIBRARY_PRIVATE_FIELD, true)
                 .findAll();
     }
