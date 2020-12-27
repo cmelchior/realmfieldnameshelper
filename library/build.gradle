@@ -12,8 +12,8 @@ dependencies {
     implementation 'com.squareup:javapoet:1.9.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation 'junit:junit:4.12'
-    testImplementation 'io.realm:realm-android-library:4.1.1'
-    testImplementation 'io.realm:realm-annotations:4.1.1'
+    testImplementation 'io.realm:realm-android-library:5.11.0'
+    testImplementation 'io.realm:realm-annotations:5.11.0'
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
