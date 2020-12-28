@@ -11,13 +11,13 @@ Just include the following dependency in your `gradle.build` file
 
 ```gradle
 // Android Java projects
-annotationProcessor 'dk.ilios:realmfieldnameshelper:1.1.1'
+annotationProcessor 'dk.ilios:realmfieldnameshelper:2.0.0'
 
 // Android Kotlin projects
-kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
+kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
 ```
 
-This library is compatible with  `Realm 1.1.1` and onwards.
+This library is compatible with  `Realm 2.0.0` and onwards.
 
 ### Plugin order with Kotlin
 
@@ -31,7 +31,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 dependencies {
-    kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
+    kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
 }
 ```
 
