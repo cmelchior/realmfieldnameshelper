@@ -17,7 +17,7 @@ annotationProcessor 'dk.ilios:realmfieldnameshelper:2.0.0'
 kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
 ```
 
-This library is compatible with  `Realm 2.0.0` and onwards.
+This library is compatible with `Realm 1.1.1` and onwards.
 
 ### Plugin order with Kotlin
 
