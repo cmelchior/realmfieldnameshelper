@@ -31,7 +31,7 @@ kapt {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(path: ':example-library')
     kapt project(':library')

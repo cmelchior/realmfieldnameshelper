@@ -1,3 +1,7 @@
+### 2.0.0
+- Bumped minSdk from 15 to 16.
+- Added support for Incremental Annotation Processors. Thank you @Zhuinden (#39).
+
 ### 1.2.0
 - Fixed a bug preventing private fields in library projects from being generated (#25).
 - When using ``@LinkingObjects`. Fields of for the parent type is now also generated instead one link away.

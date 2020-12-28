@@ -1,13 +1,12 @@
 package dk.ilios.example.realmfieldnames;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import dk.ilios.example.library.LibraryModule;
 import dk.ilios.realmfieldnames.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
